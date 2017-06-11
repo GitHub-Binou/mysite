@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <script src="{{ STATIC_URL }}js/events.js"></script>
+{% endblock head %}
+
+{% block main %}
+  <ol class="breadcrumb">
+    <li><a href="{% url 'events' %}">活动</a></li>
+    <li class="active">编辑</li>
+  </ol>
+  <form action="{% url 'edit_event' form.instance.pk %}" method="post" role="form">
+    {% csrf_token %}
+    {{ form.status }}
+    {% for field in form.visible_fields %}
+      <div class="form-group{% if field.errors %} has-error{% endif %}">
+        <label for="{{ field.label }}" class="control-label">{{ field.label }}</label>
+        {% if field.label == '内容' %}
+          {% include 'markdown_editor.html' with textarea='id_content' %}
+        {% endif %}
+        {{ field }}
+        {% if field.help_text %}
+          <span class="help-block">{{ field.help_text }}</span>
+        {% endif %}
+        {% for error in field.errors %}
+          <label class="control-label">{{ error }}</label>
+        {% endfor %}
+      </div>
+    {% endfor %}
+    <div class="form-group">
+      <button type="button" class="btn btn-primary publish">发表</button>
+      <a href="{% url 'events' %}" class="btn btn-default">取消</a>
+    </div>
+  </form>
+{% endblock main %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %} 活动 {% endblock %}
+
+{% block head %}
+  <link href="{{ STATIC_URL }}css/events.css" rel="stylesheet">
+{% endblock head %}
+
+{% block main %}
+  <div class="row">
+    <div class="col-md-offset-2 col-md-8">
+      <h3>
+        近期活动
+        <a href="{% url 'write_event' %}" class="btn btn-primary pull-right ask-btn"> 发布
+        </a>
+      </h3>
+      <hr>
+      <section class="events">
+        {% for event in events %}
+          {% include 'events/partial_event_feed.html' with event=event %}
+        {% empty %}
+          <h4 class="no-data">还没有活动。<a href="{% url 'write_event' %}">发布活动！</a></h4>
+        {% endfor %}
+      </section>
+      {% include 'paginator.html' with paginator=events %}
+    </div>
+  </div>
+{% endblock main %}
